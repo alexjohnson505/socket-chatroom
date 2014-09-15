@@ -14,6 +14,15 @@ app.set("ip", "127.0.0.1");
 // Set Port
 app.set("port", 8080);
 
+// Set VIEWS folder
+app.set("views", __dirname + "/views");
+
+// Use Jade
+app.set("view engine", "jade");
+
+// Specify public folder
+app.use(express.static("public", __dirname + "/public"));
+
 // Support JSON requests
 app.use(bodyParser.json());
 
@@ -21,8 +30,8 @@ app.use(bodyParser.json());
 // Handle route "GET /", as in "http://localhost:8080/"
 app.get("/", function(request, response) {
 
-  // Show a simple response message
-  response.send("Server is up and running");
+
+  	response.render("index");
 
 });
 
