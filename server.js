@@ -4,7 +4,8 @@ console.log("Server Starting...")
 var express = require("express")
   , app = express()                               // Express
   , http = require("http").createServer(app)      // HTTP
-  , bodyParser = require("body-parser");          // Body-parser
+  , bodyParser = require("body-parser")           // Body-parser
+  , _ = require("underscore");                    // Underscore.js
 
 /* Server config */
 
@@ -26,12 +27,37 @@ app.use(express.static("public", __dirname + "/public"));
 // Support JSON requests
 app.use(bodyParser.json());
 
-// ROUTING
-// Handle route "GET /", as in "http://localhost:8080/"
+/*****************************
+           ROUTING
+ *****************************/
+
 app.get("/", function(request, response) {
 
 
   	response.render("index");
+
+  	response.json(200, {message: "express is cool"});
+
+});
+
+/*****************************
+        API Response
+ *****************************/
+
+app.post("/message", function(request, response) {
+  // Example:
+  // curl -X POST -H 'Content-Type:application/json' 'http://localhost:8080/message' -d '{"message":"Good News Everyone!"}'
+
+  // request = {message : msg, };
+  var message = request.body.message;
+
+  // Error Handling
+  if(_.isUndefined(message) || _.isEmpty(message.trim())) {
+    return response.json(400, {error: "Message is invalid"});
+  }
+
+  // Success
+  response.json(200, {message: "Message received"});
 
 });
 
