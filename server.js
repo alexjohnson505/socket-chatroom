@@ -5,6 +5,7 @@ var express = require("express")
   , app = express()                               // Express
   , http = require("http").createServer(app)      // HTTP
   , bodyParser = require("body-parser")           // Body-parser
+  , io = require("socket.io").listen(http)        // Socket.IO
   , _ = require("underscore");                    // Underscore.js
 
 /* Server config */
@@ -32,11 +33,8 @@ app.use(bodyParser.json());
  *****************************/
 
 app.get("/", function(request, response) {
-
-
   	response.render("index");
-
-  	response.json(200, {message: "express is cool"});
+  	// response.json(200, {message: "express is cool"});
 
 });
 
