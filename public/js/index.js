@@ -1,24 +1,31 @@
 function init() {
 
-    var serverBaseUrl = document.domain;
-
-    // Init client to Socket.IO server
-    var socket = io.connect(serverBaseUrl);
+    // Init client to Socket.IO server (using Base Domain)
+    var socket = io.connect(document.domain);
     var sessionId = '';
 
     // Update the participants' list
     function updateParticipants(participants) {
-     $('#participants').html('');
-     for (var i = 0; i < participants.length; i++) {
-        $('#participants').append('<span id="' + participants[i].id + '">' +
-          participants[i].name + ' ' + (participants[i].id === sessionId ? '(You)' : '') + '<br /></span>');
-      }
+
+        // Clear list
+        $('#participants').html('');
+
+        // List participants
+        for (var i = 0; i < participants.length; i++) {
+            $('#participants').append('<span id="' + participants[i].id + '">' +
+            participants[i].name + ' ' + (participants[i].id === sessionId ? '(You)' : '') + '<br /></span>');
+        }
     }
+
+    /***************************
+         SOCKET.IO ACTIONS
+     ***************************/
 
     // On Success -> auth
     socket.on('connect', function() {
-        sessionId = socket.io.engine.id; // Session ID
+        sessionId = socket.io.engine.id; // Save session ID
         console.log('Connected ' + sessionId);
+
         socket.emit('newUser', {
             id: sessionId,
             name: $('#name').val()
@@ -56,6 +63,7 @@ function init() {
     function sendMessage() {
         var outgoingMessage = $('#outgoingMessage').val();
         var name = $('#name').val();
+
         $.ajax({
             url: '/message',
             type: 'POST',
